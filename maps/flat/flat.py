@@ -1,5 +1,3 @@
-print("jepse")
-
 def getMap()->list[list[tuple[int, int, int, int, int]]]:
     map = [];
     for i in range(4):
