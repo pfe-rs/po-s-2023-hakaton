@@ -29,18 +29,18 @@ def main():
 
     for turn in range(128):
         pygame.event.get()
-        time.sleep(0.3)
+        time.sleep(0.03)
         actions = []
-        for row in range(8):
+        for row in range(len(map)):
             actions.append([])
-            for column in range(8):
+            for column in range(len(map[0])):
                 actions[row].append(6)
         renderinator.render(screen, map, actions, purplecash, orangecash)
         pygame.display.flip()
         pygame.event.get()
         time.sleep(0.3)
-        for row in range(8):
-            for column in range(8):
+        for row in range(len(map)):
+            for column in range(len(map[0])):
                 if map[row][column][3] == 1:
                     try:
                         actions[row][column] = func_timeout.func_timeout(1, purple.act, (row, column,  1, turn, purplecash, orangecash, copinator.copyMap(map)))

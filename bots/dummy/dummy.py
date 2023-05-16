@@ -8,9 +8,9 @@ def act(row: int, column: int, team: int, turn: int, mycash: int, opcash: int, m
         roll = False
         if out == 1 and row == 0:
             roll = True
-        if out == 2 and column == 7:
+        if out == 2 and column == len(map[0])-1:
             roll = True
-        if out == 3 and row == 7:
+        if out == 3 and row == len(map)-1:
             roll = True
         if out == 4 and column == 0:
             roll = True

@@ -2,9 +2,9 @@ import copinator
 
 def playActions(actions:list[list[int]], map:list[list[tuple[int, int, int, int, int]]], purplecash:int, orangecash: int)->tuple[list[list[tuple[int, int, int, int, int]]], int, int]:
     newmap = []
-    for row in range(8):
+    for row in range(len(map)):
         newmap.append([])
-        for column in range(8):
+        for column in range(len(map[0])):
             cpu = map[row][column][0]
             ram = map[row][column][1]
             print = map[row][column][2]
@@ -15,25 +15,25 @@ def playActions(actions:list[list[int]], map:list[list[tuple[int, int, int, int,
             inpurple = 0
             inorange = 0
 
-            if row > 0 and actions[row-1][column] == 3:
+            if row - 1 >= 0 and actions[row-1][column] == 3:
                 if map[row-1][column][3] == 1:
                     inpurple += map[row-1][column][4]
                 else:
                     inorange += map[row-1][column][4]
 
-            if row < 7 and actions[row+1][column] == 1:
+            if row + 1 < len(map) and actions[row+1][column] == 1:
                 if map[row+1][column][3] == 1:
                     inpurple += map[row+1][column][4]
                 else:
                     inorange += map[row+1][column][4]
 
-            if column > 0 and actions[row][column-1] == 2:
+            if column - 1 >= 0 and actions[row][column-1] == 2:
                 if map[row][column-1][3] == 1:
                     inpurple += map[row][column-1][4]
                 else:
                     inorange += map[row][column-1][4]
             
-            if column < 7 and actions[row][column+1] == 4:
+            if column + 1 < len(map[0]) and actions[row][column+1] == 4:
                 if map[row][column+1][3] == 1:
                     inpurple += map[row][column+1][4]
                 else:

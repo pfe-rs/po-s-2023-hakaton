@@ -63,8 +63,8 @@ def render(screen:pygame.Surface, map:list[list[tuple[int, int, int, int, int]]]
     bigfont = pygame.freetype.SysFont("Comic Sans MS", 30)
     biggerfont = pygame.freetype.SysFont("Comic Sans MS", 40)
     screen.fill("black")
-    for row in range(8):
-        for column in range(8):
+    for row in range(len(map)):
+        for column in range(len(map[0])):
             rect = pygame.Rect(column*100, row*100, 100, 100)
             botrect = pygame.Rect(column*100, row*100+70, 100, 30)
             pygame.draw.rect(screen, "purple" if map[row][column][3] == 1 else "orange" if map[row][column][3]==-1 else "gray", rect, 0)
@@ -72,8 +72,8 @@ def render(screen:pygame.Surface, map:list[list[tuple[int, int, int, int, int]]]
             font.render_to(screen, rect, str(map[row][column][4])+"/"+str(map[row][column][1])+"+"+str(map[row][column][0]), (0, 0, 0))
             if map[row][column][2] > 0: 
                 font.render_to(screen, botrect, "$"+str(map[row][column][2]), (0, 255, 0))
-    for row in range(8):
-        for column in range(8):
+    for row in range(len(map)):
+        for column in range(len(map[0])):
             midrect = pygame.Rect(column*100+30, row*100+30, 100, 40)
             if actions[row][column] == 0:
                 pygame.draw.rect(screen, "red", pygame.Rect(column*100+30, row*100+45, 40, 10), 0)
