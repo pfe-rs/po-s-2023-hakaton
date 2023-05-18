@@ -1,5 +1,2 @@
-bots/dummy/__pycache__/dummy.cpython-39.pyc
-engine/__pycache__/actinator.cpython-39.pyc
-engine/__pycache__/copinator.cpython-39.pyc
-engine/__pycache__/renderinator.cpython-39.pyc
-maps/flat/__pycache__/flat.cpython-39.pyc
+*.pyc
+*.pyo
