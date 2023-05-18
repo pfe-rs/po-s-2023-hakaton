@@ -67,7 +67,8 @@ def render(screen:pygame.Surface, map:list[list[tuple[int, int, int, int, int]]]
         for column in range(len(map[0])):
             rect = pygame.Rect(column*100, row*100, 100, 100)
             botrect = pygame.Rect(column*100, row*100+70, 100, 30)
-            pygame.draw.rect(screen, "purple" if map[row][column][3] == 1 else "orange" if map[row][column][3]==-1 else "gray", rect, 0)
+            pygame.draw.rect(screen, (map[row][column][1]*8+63, map[row][column][1]*8+63, map[row][column][1]*8+63), rect, 0)
+            pygame.draw.rect(screen, "purple" if map[row][column][3] == 1 else "orange" if map[row][column][3]==-1 else (map[row][column][1]*12+63, map[row][column][1]*12+63, map[row][column][1]*12+63), rect, map[row][column][4]*50//map[row][column][1]+5)
             pygame.draw.rect(screen, "black", rect, 1)
             font.render_to(screen, rect, str(map[row][column][4])+"/"+str(map[row][column][1])+"+"+str(map[row][column][0]), (0, 0, 0))
             if map[row][column][2] > 0: 
@@ -76,8 +77,8 @@ def render(screen:pygame.Surface, map:list[list[tuple[int, int, int, int, int]]]
         for column in range(len(map[0])):
             midrect = pygame.Rect(column*100+30, row*100+30, 100, 40)
             if actions[row][column] == 0:
-                pygame.draw.rect(screen, "red", pygame.Rect(column*100+30, row*100+45, 40, 10), 0)
-                pygame.draw.rect(screen, "red", pygame.Rect(column*100+45, row*100+30, 10, 40), 0)
+                pygame.draw.rect(screen, "blue", pygame.Rect(column*100+30, row*100+45, 40, 10), 0)
+                pygame.draw.rect(screen, "blue", pygame.Rect(column*100+45, row*100+30, 10, 40), 0)
             elif actions[row][column] == 5:
                 bigfont.render_to(screen, midrect, "$"+str(map[row][column][2]), (0, 255, 0))
             elif actions[row][column] == 1:
