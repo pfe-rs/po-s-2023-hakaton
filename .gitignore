@@ -1,2 +1,4 @@
 *.pyc
 *.pyo
+db.db
+bots
