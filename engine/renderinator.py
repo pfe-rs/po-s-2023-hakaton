@@ -58,7 +58,7 @@ def draw_arrow(
 
         pygame.draw.polygon(surface, color, body_verts)
 
-def render(screen:pygame.Surface, map:list[list[tuple[int, int, int, int, int]]], actions:list[list[int]], purplecash:int, orangecash:int):
+def render(screen:pygame.Surface, map:list[list[tuple[int, int, int, int, int]]], actions:list[list[int]], purplecash:int, orangecash:int, turn:int, max_turns: int):
     font = pygame.freetype.SysFont("Comic Sans MS", 24)
     bigfont = pygame.freetype.SysFont("Comic Sans MS", 30)
     biggerfont = pygame.freetype.SysFont("Comic Sans MS", 40)
@@ -90,6 +90,7 @@ def render(screen:pygame.Surface, map:list[list[tuple[int, int, int, int, int]]]
             elif actions[row][column] == 4:
                 draw_arrow(screen, pygame.Vector2(column*100+30, row*100+65), pygame.Vector2(column*100-30, row*100+65), "red")
     pygame.draw.rect(screen, "black", pygame.Rect(800, 0, 200, 800), 0)
+    bigfont.render_to(screen, pygame.Rect(800, 0, 100, 100), f"turn {turn}/{max_turns}" , "red")
     bigfont.render_to(screen, pygame.Rect(850, 100, 100, 100), "$"+str(purplecash), "purple")
     bigfont.render_to(screen, pygame.Rect(850, 600, 100, 100), "$"+str(orangecash), "orange")
     
