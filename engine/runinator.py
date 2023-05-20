@@ -23,11 +23,11 @@ def main():
     sys.modules["dummy"] = orange
     spec.loader.exec_module(orange)
 
-    map = mapinator.getMap()
+    num_turns, map = mapinator.getMap()
     purplecash = 0
     orangecash = 0
 
-    for turn in range(128):
+    for turn in range(num_turns):
         pygame.event.get()
         time.sleep(0.3)
         actions = []

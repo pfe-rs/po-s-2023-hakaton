@@ -1,5 +1,6 @@
-def getMap()->list[list[tuple[int, int, int, int, int]]]:
-    map = [];
+def getMap()->tuple[list[list[tuple[int, int, int, int, int]]]]:
+    num_turns = 128
+    map = []
     for i in range(8):
         row = []
         for j in range(8):
@@ -11,4 +12,4 @@ def getMap()->list[list[tuple[int, int, int, int, int]]]:
     map[3][4] = (0, 16, 16, 0, 16)
     map[4][3] = (0, 16, 16, 0, 16)
     map[4][4] = (0, 16, 16, 0, 16)
-    return map
+    return num_turns, map
