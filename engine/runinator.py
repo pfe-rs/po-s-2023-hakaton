@@ -48,7 +48,7 @@ def main():
                         actions[row][column] = -1
                 if map[row][column][3] == -1:
                     try:
-                        actions[row][column] = func_timeout.func_timeout(0.1, orange.act, (row, column,  1, turn, purplecash, orangecash, copinator.copyMap(map)))
+                        actions[row][column] = func_timeout.func_timeout(0.1, orange.act, (row, column,  -1, turn, purplecash, orangecash, copinator.copyMap(map)))
                     except:
                         actions[row][column] = -1
         renderinator.render(screen, map, actions, purplecash, orangecash)
