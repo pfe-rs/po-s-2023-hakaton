@@ -1,66 +1,94 @@
-import importlib.util
+import importlib
 import sys
+import func_timeout
+from dataclasses import dataclass
 import copinator
 import actinator
-import func_timeout
-import pygame
-import renderinator
-import time
 
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((1000, 800))
-    spec = importlib.util.spec_from_file_location(sys.argv[1], "maps/"+sys.argv[1]+"/"+sys.argv[1]+".py")
+@dataclass
+class State:
+    # a matrix of state
+    curr_map: list[list[tuple[int, int, int, int, int]]]
+    # holds max turns in the game
+    max_turns: int
+    # turn number, starts at 0, if even bot1 plays
+    turn: int
+
+    score1: int
+    score2: int
+
+    # actions that led to this state (mostly for visualization purposes)
+    last_played_actions: list[list[int]]
+
+def create_def_state(max_turns, map):
+    return State(map, max_turns, 0, 0, 0, get_empty_actions(map))
+
+def get_empty_actions(map):
+    actions = []
+    for row in range(len(map)):
+        actions.append([])
+        for column in range(len(map[0])):
+            actions[row].append(6)
+    return actions
+
+def resolve_map(map):
+    spec = importlib.util.spec_from_file_location(map, "maps/"+map+"/"+map+".py")
     mapinator = importlib.util.module_from_spec(spec)
     sys.modules["flat"] = mapinator
     spec.loader.exec_module(mapinator)
-    spec = importlib.util.spec_from_file_location(sys.argv[2], "bots/"+sys.argv[2]+"/"+sys.argv[2]+".py")
+    return mapinator
+
+def resolve_bot(bot):
+    spec = importlib.util.spec_from_file_location(bot, "bots/"+bot+"/"+bot+".py")
     purple = importlib.util.module_from_spec(spec)
     sys.modules["dummy"] = purple
     spec.loader.exec_module(purple)
-    spec = importlib.util.spec_from_file_location(sys.argv[3], "bots/"+sys.argv[3]+"/"+sys.argv[3]+".py")
-    orange = importlib.util.module_from_spec(spec)
-    sys.modules["dummy"] = orange
-    spec.loader.exec_module(orange)
+    return purple
 
-    map = mapinator.getMap()
-    purplecash = 0
-    orangecash = 0
+class Game():
 
-    for turn in range(128):
-        pygame.event.get()
-        time.sleep(0.3)
-        actions = []
-        for row in range(len(map)):
-            actions.append([])
-            for column in range(len(map[0])):
-                actions[row].append(6)
-        renderinator.render(screen, map, actions, purplecash, orangecash)
-        pygame.display.flip()
-        pygame.event.get()
-        time.sleep(0.3)
-        for row in range(len(map)):
-            for column in range(len(map[0])):
-                if map[row][column][3] == 1:
+    def __init__(self, bot1, bot2, map):
+        self.bot1 = resolve_bot(bot1)
+        self.bot2 = resolve_bot(bot2)
+        self.map = resolve_map(map)
+        
+        max_turns, map = self.map.getMap()
+        self.currState = create_def_state( max_turns, map)
+
+    def bot1plays(self):
+        return (self.currState.turn % 2 == 0)
+
+    def fill_new_action(self):
+        
+        bot = self.bot1 if self.bot1plays() else self.bot2
+        curr_map = self.currState.curr_map
+        actions = get_empty_actions(curr_map)
+        for row in range(len(curr_map)):
+            for column in range(len(curr_map[0])):
+                if curr_map[row][column][3] == 1 and self.bot1plays():
                     try:
-                        actions[row][column] = func_timeout.func_timeout(0.1, purple.act, (row, column,  1, turn, purplecash, orangecash, copinator.copyMap(map)))
+                        actions[row][column] = func_timeout.func_timeout(0.1, bot.act, (row, column,  1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
                     except:
                         actions[row][column] = -1
-                if map[row][column][3] == -1:
+                if curr_map[row][column][3] == -1 and not self.bot1plays():
                     try:
-                        actions[row][column] = func_timeout.func_timeout(0.1, orange.act, (row, column,  -1, turn, purplecash, orangecash, copinator.copyMap(map)))
+                        actions[row][column] = func_timeout.func_timeout(0.1, bot.act, (row, column,  -1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
                     except:
                         actions[row][column] = -1
-        renderinator.render(screen, map, actions, purplecash, orangecash)
-        pygame.display.flip()
-        pygame.event.get()
-        time.sleep(0.3)
-        map, purplecash, orangecash = actinator.playActions(actions, map, purplecash, orangecash)
-        renderinator.render(screen, map, actions, purplecash, orangecash)
-        pygame.display.flip()
+        self.currState.last_played_actions = actions
+        return self.currState
+
+    def fill_new_map(self):
+        self.currState.curr_map, self.currState.score1, self.currState.score2 = actinator.playActions(self.currState.last_played_actions, self.currState.curr_map, self.currState.score1, self.currState.score2)
+        self.currState.turn +=1
+        return self.currState
     
-    print(purplecash, orangecash)
+    def is_game_finished(self):
+        return self.currState.turn >= self.currState.max_turns
 
+    def step(self):
+        self.fill_new_action()
+        self.fill_new_map()
 
-if __name__ == "__main__":
-    main()
+        return self.currState, self.is_game_finished()
+
