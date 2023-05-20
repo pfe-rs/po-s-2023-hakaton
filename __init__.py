@@ -6,12 +6,13 @@ from werkzeug.datastructures import  FileStorage
 import os
 import sqlite3
 
+from common import db_location
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "rols123"
 app.config['UPLOAD_FOLDER'] = "/root/pyserver/bots/"
 app.config['MAX_CONTENT_PATH'] = 10000000
-
 
 @app.route("/")  # this sets the route to this page
 def home():
@@ -23,7 +24,7 @@ def upload_bot():
 	return render_template('upload.html')
 
 def add_file_to_base(botname, passw):
-	with sqlite3.connect("/root/pyserver/db.db") as conn:
+	with sqlite3.connect(db_location) as conn:
 		cur = conn.cursor()
 		cur.execute(
 			"insert into uploadedfiles(bot, userpass) values (?,?)",

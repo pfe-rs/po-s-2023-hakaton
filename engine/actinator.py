@@ -1,4 +1,3 @@
-import copinator
 
 def playActions(actions:list[list[int]], map:list[list[tuple[int, int, int, int, int]]], purplecash:int, orangecash: int)->tuple[list[list[tuple[int, int, int, int, int]]], int, int]:
     newmap = []

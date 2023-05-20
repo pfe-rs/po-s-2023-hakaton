@@ -1,9 +1,13 @@
 import importlib
 import sys
-import func_timeout
+from func_timeout import func_timeout
+import copy
 from dataclasses import dataclass
-import copinator
-import actinator
+# Im in pain to solve these imports properly
+# it currently works only from schedule runs
+# https://stackoverflow.com/questions/16981921/relative-imports-in-python-3
+from . import copinator
+from . import actinator
 
 @dataclass
 class State:
@@ -55,6 +59,9 @@ class Game():
         max_turns, map = self.map.getMap()
         self.currState = create_def_state( max_turns, map)
 
+    def get_state_copy(self):
+        return copy.deepcopy(self.currState)
+
     def bot1plays(self):
         return (self.currState.turn % 2 == 0)
 
@@ -66,13 +73,14 @@ class Game():
         for row in range(len(curr_map)):
             for column in range(len(curr_map[0])):
                 if curr_map[row][column][3] == 1 and self.bot1plays():
+                    # Note that func_timeout doesn't seem to work on windows!
                     try:
-                        actions[row][column] = func_timeout.func_timeout(0.1, bot.act, (row, column,  1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
+                        actions[row][column] = func_timeout(0.1, bot.act, (row, column,  1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
                     except:
                         actions[row][column] = -1
                 if curr_map[row][column][3] == -1 and not self.bot1plays():
                     try:
-                        actions[row][column] = func_timeout.func_timeout(0.1, bot.act, (row, column,  1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
+                        actions[row][column] = func_timeout(0.1, bot.act, (row, column,  1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
                     except:
                         actions[row][column] = -1
         self.currState.last_played_actions = actions
