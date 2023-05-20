@@ -3,6 +3,7 @@ from flask import render_template, request
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from .common import execute_query
+from process_matches import image_loc
 
 import os
 import sqlite3
@@ -50,7 +51,10 @@ def upload_file():
 @app.route('/games')
 def list_games():
       res = execute_query("select * from runs")
-      headers = ["player1", "player2", "map", "time added", "time played", "finished", "score1", "score2"]
+      headers = ["player1", "player2", "map", "time added", "time played", "finished", "score1", "score2", "link"]
+
+      for single_res in res:
+            single_res.append(f"/render/{res[0]}/{res[1]}/{res[2]}/0")
 
       res = sorted(res, key=lambda x: x[4], reverse=True)
       return render_template(
@@ -73,6 +77,18 @@ def rank():
         tableData=res
     )
 
+@app.route('/render/<bot1>/<bot2>/<map>/<turn>')
+def render(bot1, bot2, map, turn):
+      next_turn = (turn + 1) % 128
+      prev_turn = (turn + 127) % 128
+      image_src = os.path.join(image_loc, f"{bot1}_{bot2}_{map}_{turn}.jpg")
+      return render_template(
+            "render.html",
+            img_src = image_src,
+            next_link = f"/render/{bot1}/{bot2}/{map}/{next_turn}",
+            prev_link = f"/render/{bot1}/{bot2}/{map}/{prev_turn}"
+      )
+      
 
 if __name__ == "__main__":
 

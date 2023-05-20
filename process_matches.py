@@ -2,6 +2,12 @@ from common import execute_command, execute_query
 from runinator import Game, State
 from datetime import datetime
 from random import randrange, shuffle
+import pygame
+import renderinator
+import os
+
+rel_path = os.path.dirname(os.path.realpath(__file__))
+image_loc = os.path.join(rel_path, "renders")
 
 def evaluate_gameplay(bot1, bot2, map):
     game = Game(bot1, bot2, map)
@@ -35,6 +41,9 @@ def process_match(mch):
                     f"where bot1='{mch[0]}' "
                     f"and bot2='{mch[1]}' "
                     f"and map='{mch[2]}'")
+    
+    for state in states_to_persist:
+        render_image(mch[0], mch[1], mch[2], state)
 
 
 def get_all_unplayed_randomized(n):
@@ -51,9 +60,20 @@ def get_single_unplayed():
     else:
         return None
 
+def render_image(bot1, bot2, map, state: State):
+    image_prefix = bot1 + "_" + bot2 + "_" + map + "_" + str(state.turn)
+    pygame.init()
+    screen = pygame.display.set_mode((1000, 800))
+    renderinator.render(screen, state.curr_map, state.last_played_actions, state.score1, state.score2, state.turn, state.max_turns)
+    outimg = os.path.join(image_loc, image_prefix + ".jpg")
+    os.makedirs(image_loc, exist_ok=True)
+    pygame.image.save(screen, outimg)
+    print(f"{datetime.now()} rendered image to {outimg}")
+
+
 print(datetime.now())
 # mch = get_single_unplayed()
 # if (mch):
 #     process_match(mch)
-for mch in get_all_unplayed_randomized(10):
+for mch in get_all_unplayed_randomized(1):
     process_match(mch)

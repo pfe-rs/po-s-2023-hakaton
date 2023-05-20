@@ -7,3 +7,5 @@ venv
 bot_*
 log_*
 db.*
+*__pycache__
+renders/
