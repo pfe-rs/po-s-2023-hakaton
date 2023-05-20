@@ -1,5 +1,5 @@
 from common import execute_command, execute_query
-from engine.runinator import Game, State
+from runinator import Game, State
 from datetime import datetime
 from random import randrange, shuffle
 
@@ -37,11 +37,11 @@ def process_match(mch):
                     f"and map='{mch[2]}'")
 
 
-def get_all_unplayed_randomized():
+def get_all_unplayed_randomized(n):
     res = execute_query("select * from runs where run = 'false'")
     print (f"Found {len(res)} still unplayed")
     shuffle(res)
-    return res
+    return res[:n]
 
 def get_single_unplayed():
     res = get_all_unplayed_randomized()
@@ -51,8 +51,9 @@ def get_single_unplayed():
     else:
         return None
 
+print(datetime.now())
 # mch = get_single_unplayed()
 # if (mch):
 #     process_match(mch)
-for mch in get_all_unplayed_randomized():
+for mch in get_all_unplayed_randomized(1):
     process_match(mch)

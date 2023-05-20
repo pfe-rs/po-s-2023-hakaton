@@ -7,14 +7,12 @@ from datetime import datetime
 rel_path = os.path.dirname(os.path.realpath(__file__))
 
 def get_all_bots():
-    bots_dir = os.path.join(rel_path, "bots")
-    bots = os.listdir(bots_dir)
+    bots = [file.replace(".py", "") for file in os.listdir(rel_path) if file.startswith("bot_")]
     print(f"Found bots {bots}")
     return bots
 
 def get_all_maps():
-    maps_dir = os.path.join(rel_path, "maps")
-    maps = os.listdir(maps_dir)
+    maps = [file.replace(".py", "") for file in os.listdir(rel_path) if file.startswith("map_")]
     print(f"Found maps {maps}")
     return maps
 
@@ -89,6 +87,6 @@ def update_rankings():
             print(f"Updating rank {bot}")
             execute_command(f"insert or replace into rankings values (?, ?, ?, ?, ?)", (bot, rank["wins"], rank["loses"], rank["score"], rank["score"]/max_score))
 
-
+print(datetime.now())
 add_new_runs()
 update_rankings()

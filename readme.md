@@ -15,7 +15,7 @@ run initial_database.py
 to setup crons
 sudo systemctl start cron
 crontab -e
-* * * * * python3 /root/pyserver/cron_process_matches.sh >> /root/pyserver/shlog.txt
-* * * * * python3 /root/pyserver/cron_schedule_runs.sh >> /root/pyserver/shlogruns.txt
-crontab -
+* * * * * /usr/bin/flock -n /tmp/fcj_proc.lockfile python3 /root/pyserver/schedule_runs.py >> /root/pyserver/log_schedule_runs.txt 2>&1
+* * * * * /usr/bin/flock -n /tmp/fcj_sch.lockfile python3 /root/pyserver/process_matches.py >> /root/pyserver/log_process_matches.log 2>&1
 
+chmod +x /root/pyserver/cron_*

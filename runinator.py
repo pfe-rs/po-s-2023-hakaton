@@ -3,11 +3,8 @@ import sys
 from func_timeout import func_timeout
 import copy
 from dataclasses import dataclass
-# Im in pain to solve these imports properly
-# it currently works only from schedule runs
-# https://stackoverflow.com/questions/16981921/relative-imports-in-python-3
-from . import copinator
-from . import actinator
+import copinator
+import actinator
 
 @dataclass
 class State:
@@ -36,18 +33,10 @@ def get_empty_actions(map):
     return actions
 
 def resolve_map(map):
-    spec = importlib.util.spec_from_file_location(map, "maps/"+map+"/"+map+".py")
-    mapinator = importlib.util.module_from_spec(spec)
-    sys.modules["flat"] = mapinator
-    spec.loader.exec_module(mapinator)
-    return mapinator
+    return importlib.__import__(map)
 
 def resolve_bot(bot):
-    spec = importlib.util.spec_from_file_location(bot, "bots/"+bot+"/"+bot+".py")
-    purple = importlib.util.module_from_spec(spec)
-    sys.modules["dummy"] = purple
-    spec.loader.exec_module(purple)
-    return purple
+    return importlib.__import__(bot)
 
 class Game():
 
