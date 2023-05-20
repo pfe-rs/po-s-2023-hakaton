@@ -7,7 +7,7 @@ import renderinator
 import os
 
 rel_path = os.path.dirname(os.path.realpath(__file__))
-image_loc = os.path.join(rel_path, "renders")
+image_loc = os.path.join(rel_path, "static")
 
 def evaluate_gameplay(bot1, bot2, map):
     game = Game(bot1, bot2, map)
@@ -23,7 +23,7 @@ def evaluate_gameplay(bot1, bot2, map):
 
 def commit_gameplay_states(bot1, bot2, map, states):
     for state in states:
-        execute_command("insert into gameplay values (?, ?, ?, ?, ?)", (bot1, bot2, map, state.turn, str(state)))
+        execute_command("insert or replace into gameplay values (?, ?, ?, ?, ?)", (bot1, bot2, map, state.turn, str(state)))
 
 def process_match(mch):
     print(f"processing match {mch[0]} {mch[1]} {mch[2]}")
@@ -75,5 +75,5 @@ print(datetime.now())
 # mch = get_single_unplayed()
 # if (mch):
 #     process_match(mch)
-for mch in get_all_unplayed_randomized(1):
+for mch in get_all_unplayed_randomized(10):
     process_match(mch)

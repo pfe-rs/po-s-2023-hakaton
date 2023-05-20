@@ -1,3 +1,24 @@
-<img src="{{img_src}}">
-<button link="{{prev_link}}">prev</button>
-<button link="{{next_link}}">next</button>
+
+<button id='button_prev'">prev</button>
+<button id='button_next'">next</button>
+<br/>
+<img src="{{ img_pref }}{{ first_turn }}.jpg" id="imageID">
+
+<script type="text/javascript">
+	let counter = {{ first_turn }}; // declared in global scope
+	let imgpref = "{{ img_pref }}";
+
+document.querySelector('#button_next').addEventListener('click', function() {
+    	counter++;
+    	buildimg = `${imgpref}${counter}.jpg`;
+    	document.querySelector('#imageID').setAttribute('src', buildimg);
+      document.querySelector('div').innerHTML = buildimg;
+    });
+
+document.querySelector('#button_prev').addEventListener('click', function() {
+        counter--;
+        buildimg = `${imgpref}${counter}.jpg`;
+        document.querySelector('#imageID').setAttribute('src', buildimg);
+      document.querySelector('div').innerHTML = buildimg;
+    });
+    </script>
