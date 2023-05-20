@@ -55,21 +55,19 @@ class Game():
         return (self.currState.turn % 2 == 0)
 
     def fill_new_action(self):
-        
-        bot = self.bot1 if self.bot1plays() else self.bot2
         curr_map = self.currState.curr_map
         actions = get_empty_actions(curr_map)
         for row in range(len(curr_map)):
             for column in range(len(curr_map[0])):
-                if curr_map[row][column][3] == 1 and self.bot1plays():
+                if curr_map[row][column][3] == 1:
                     # Note that func_timeout doesn't seem to work on windows!
                     try:
-                        actions[row][column] = func_timeout(0.1, bot.act, (row, column,  1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
+                        actions[row][column] = func_timeout(0.1, self.bot1.act, (row, column,  1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
                     except:
                         actions[row][column] = -1
-                if curr_map[row][column][3] == -1 and not self.bot1plays():
+                if curr_map[row][column][3] == -1:
                     try:
-                        actions[row][column] = func_timeout(0.1, bot.act, (row, column,  1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
+                        actions[row][column] = func_timeout(0.1, self.bot2.act, (row, column,  1, self.currState.turn, self.currState.score1, self.currState.score2, copinator.copyMap(self.currState.curr_map)))
                     except:
                         actions[row][column] = -1
         self.currState.last_played_actions = actions
