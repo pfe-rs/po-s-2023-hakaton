@@ -3,14 +3,17 @@ import time
 
 def act(row: int, column: int, team: int, turn: int, mycash: int, opcash: int, map:list[list[tuple[int, int, int, int, int]]])->int:
     roll = True
+    # works only for 8x8 map
+    if len(map) != 8 or len(map[0]) != 8:
+        return -1
     while roll:
         out = randrange(6)
         roll = False
         if out == 1 and row == 0:
             roll = True
-        if out == 2 and column == len(map[0])-1:
+        if out == 2 and column == 7:
             roll = True
-        if out == 3 and row == len(map)-1:
+        if out == 3 and row == 7:
             roll = True
         if out == 4 and column == 0:
             roll = True
