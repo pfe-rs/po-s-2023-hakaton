@@ -4,3 +4,6 @@ db.db
 bots
 venv
 *.log
+bot_*
+log_*
+db.*

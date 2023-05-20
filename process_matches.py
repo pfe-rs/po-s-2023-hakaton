@@ -11,7 +11,7 @@ def evaluate_gameplay(bot1, bot2, map):
         game.step()
         state = game.get_state_copy()
         states_to_persist.append(state)
-        print(f"game step turn {state.turn}, score1 {state.score1}, score2 {state.score2}")
+        print(f"{datetime.now()} game step turn {state.turn}, score1 {state.score1}, score2 {state.score2}")
     
     return states_to_persist
 
@@ -55,5 +55,5 @@ print(datetime.now())
 # mch = get_single_unplayed()
 # if (mch):
 #     process_match(mch)
-for mch in get_all_unplayed_randomized(1):
+for mch in get_all_unplayed_randomized(10):
     process_match(mch)

@@ -2,12 +2,12 @@ from flask import Flask, jsonify
 from flask import render_template, request
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
-from common import execute_query
+from .common import execute_query
 
 import os
 import sqlite3
 
-from common import db_location
+from .common import db_location
 
 app = Flask(__name__)
 
@@ -40,8 +40,8 @@ def upload_file():
       botname = request.form["botname"]
       passw = request.form["pass"]
       botname = "bot_" + passw + "_" + botname
-      os.makedirs(os.path.join(app.config["UPLOAD_FOLDER"], botname), exist_ok=True)
-      f.save(os.path.join(app.config['UPLOAD_FOLDER'], botname, botname + ".py"))
+      #os.makedirs(os.path.join(app.config["UPLOAD_FOLDER"], botname), exist_ok=True)
+      f.save(os.path.join(app.config['UPLOAD_FOLDER'], botname + ".py"))
 
       add_file_to_base(botname, passw)
 
@@ -52,11 +52,27 @@ def list_games():
       res = execute_query("select * from runs")
       headers = ["player1", "player2", "map", "time added", "time played", "finished", "score1", "score2"]
 
+      res = sorted(res, key=lambda x: x[4], reverse=True)
       return render_template(
-        'index.html',
+        'games.html',
         headers=headers,
         tableData=res
     )
+
+
+@app.route('/rank')
+def rank():
+      res = execute_query("select * from rankings")
+      headers = ["player1", "wins", "loses", "score", "rank"]
+
+      res = sorted(res, key=lambda x: x[4], reverse=True)
+
+      return render_template(
+        'rankings.html',
+        headers=headers,
+        tableData=res
+    )
+
 
 if __name__ == "__main__":
 
