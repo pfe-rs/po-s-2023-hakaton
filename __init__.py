@@ -43,6 +43,12 @@ def upload_file():
       f = request.files['file']
       botname = request.form["botname"]
       passw = request.form["pass"]
+      if len(botname) == 0 or len(passw) == 0:
+         return "FAILED: botname and passw have to be non empty"
+      if not botname.replace('_', '').isalnum() or not passw.replace('_', '').isalnum():
+         return "FAILED: botname and passw can contain only _ and alfanum"
+      if len(botname) > 50 or len(passw) > 50:
+         return "FAILED: botname and passw have to be shorter than 50"
       botname = "bot_" + passw + "_" + botname
       #os.makedirs(os.path.join(app.config["UPLOAD_FOLDER"], botname), exist_ok=True)
       f.save(os.path.join(app.config['UPLOAD_FOLDER'], botname + ".py"))
