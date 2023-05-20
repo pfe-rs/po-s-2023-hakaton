@@ -19,3 +19,7 @@ crontab -e
 * * * * * /usr/bin/flock -n /tmp/fcj_sch.lockfile python3 /root/pyserver/process_matches.py >> /root/pyserver/log_process_matches.log 2>&1
 
 chmod +x /root/pyserver/cron_*
+
+
+to reset certain bot (change the name obviously)
+python3 remove_bot.py bot_admin_dummy
