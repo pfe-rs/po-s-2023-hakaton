@@ -89,7 +89,7 @@ def list_games_no_score():
 
       res = sorted(res, key=lambda x: x[4], reverse=True)
       return render_template(
-        'games.html',
+        'games_no_score.html',
         headers=headers,
         tableData=res
     )
@@ -130,10 +130,6 @@ def renderimg(bot1, bot2, map, turn):
       )
       
 
-def calc_res(matches):
-     
-     for mch in match
-
 @app.route('/ranktour')
 def rank():
       res = execute_query("select * from runs where run = 'true'")
@@ -152,6 +148,9 @@ def rank():
             bots.add(bot2)
 
       bots = list(bots)
+      bots_ranks = {}
+      for bot in bots:
+            bots_ranks[bot] = {"wins" : 0, "loses": 0, "draws": 0, "score": 0}
 
       bot_score = {}
       for k, r_list in bot_res.items():
@@ -162,15 +161,34 @@ def rank():
                   if r[6] < r[7]:
                         score -= 1
             bot_score[k] = score
-      
-      
+
+      # now map each combination of bots to a single bot score
+      for k in bot_score.keys():
+            bot1, bot2 = k
+            if k == 0:
+                  bots_ranks[bot1]["score"] += 1
+                  bots_ranks[bot2]["score"] += 1
+                  bots_ranks[bot1]["draws"] += 1
+                  bots_ranks[bot2]["draws"] += 1
+            elif k > 0:
+                  bots_ranks[bot1]["score"] += 3
+                  bots_ranks[bot2]["score"] += 0
+                  bots_ranks[bot1]["wins"] += 1
+                  bots_ranks[bot2]["loses"] += 1
+            else:
+                  bots_ranks[bot1]["score"] += 0
+                  bots_ranks[bot2]["score"] += 3
+                  bots_ranks[bot1]["loses"] += 1
+                  bots_ranks[bot2]["wins"] += 1
+
+      out_list = [[key.split("_")[1], "_".join(key.split("_")[2:]), val["wins"], val["loses"], val["draws"], val["score"]] for key, val in bots_ranks.items()]
 
 
-      res = sorted(res, key=lambda x: x[4], reverse=True)
+      res = sorted(out_list, key=lambda x: x[5], reverse=True)
 
       return render_template(
-        'rankings.html',
-        headers=headers,
+        'rankings_tour.html',
+        headers=["player", "botname", "wins", "loses", "draws", "score"],
         tableData=res
     )
 
