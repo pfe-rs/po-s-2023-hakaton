@@ -5,6 +5,7 @@ from random import randrange, shuffle
 import pygame
 import renderinator
 import os
+import subprocess
 
 rel_path = os.path.dirname(os.path.realpath(__file__))
 image_loc = os.path.join(rel_path, "static")
@@ -69,6 +70,19 @@ def render_image(bot1, bot2, map, state: State):
     os.makedirs(image_loc, exist_ok=True)
     pygame.image.save(screen, outimg)
     print(f"{datetime.now()} rendered image to {outimg}")
+
+def render_gifs(bot1, bot2, map):
+    gif_prefix = bot1 + "_" + bot2 + "_" + map + "_"
+    images_str = gif_prefix + "%d.jpg"
+    for fps in ["1", "10"]:
+        out_gif = gif_prefix + fps + "fps.gif"
+        inp_img = os.path.join(image_loc, images_str)
+
+        print(f"Rendering gif at {out_gif}")
+        subprocess.run(["ffmpeg", 
+                        "-framerate", fps,
+                        "-i", inp_img,
+                        out_gif])
 
 
 print(datetime.now())

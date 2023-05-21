@@ -92,11 +92,21 @@ def rank():
 def renderimg(bot1, bot2, map, turn):
       next_turn = (int(turn) + 1) % 128
       prev_turn = (int(turn) + 127) % 128
+
+      player1 = bot1.split("_")[1]
+      player2 = bot2.split("_")[1]
+      name1 = "_".join(bot1.split("_")[2:])
+      name2 = "_".join(bot2.split("_")[2:])
+      img_prefix = f"/static/{bot1}_{bot2}_{map}_"
       
       return render_template(
             "render.html",
             first_turn = turn,
-            img_pref = f"/static/{bot1}_{bot2}_{map}_"
+            img_pref = img_prefix,
+            player1=player1,
+            player2=player2,
+            name1=name1,
+            name2=name2
       )
       
 

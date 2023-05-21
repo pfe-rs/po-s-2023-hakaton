@@ -1,6 +1,11 @@
-
+<p>TEAM PURPLE: {{ player1 }}      BOT: {{ name1 }}</p>
+<br/>
+<p>TEAM ORANGE: {{ player2 }}      BOT: {{ name2 }}</p>
+<br/>
 <button id='button_prev'">prev</button>
 <button id='button_next'">next</button>
+<button id='button_gif_slow'">Animation slow</button>
+<button id='button_gif_fast'">Animation fast</button>
 <br/>
 <img src="{{ img_pref }}{{ first_turn }}.jpg" id="imageID">
 
@@ -19,6 +24,15 @@ document.querySelector('#button_prev').addEventListener('click', function() {
         counter--;
         buildimg = `${imgpref}${counter}.jpg`;
         document.querySelector('#imageID').setAttribute('src', buildimg);
+      document.querySelector('div').innerHTML = buildimg;
+    });
+
+document.querySelector('#button_gif_slow').addEventListener('click', function() {
+        document.querySelector('#imageID').setAttribute('src', "{{ img_pref }}1fps.gif");
+      document.querySelector('div').innerHTML = buildimg;
+    });
+document.querySelector('#button_gif_fast').addEventListener('click', function() {
+        document.querySelector('#imageID').setAttribute('src', "{{ img_pref }}10fps.gif");
       document.querySelector('div').innerHTML = buildimg;
     });
     </script>
