@@ -26,6 +26,7 @@ def home():
 
 @app.route("/upload")
 def upload_bot():
+        #return jsonify({'message': "Uploads are closed!"})
 	return render_template('upload.html')
 
 def add_file_to_base(botname, passw):
@@ -54,7 +55,7 @@ def upload_file():
       f.save(os.path.join(app.config['UPLOAD_FOLDER'], botname + ".py"))
 
       add_file_to_base(botname, passw)
-
+      #return 'uploads are closed'
       return f'file uploaded successfully, under passwd {request.form["pass"]}'
 
 @app.route('/games')
@@ -68,6 +69,7 @@ def list_games():
             single_res.append(f"/render/{single_res[0]}/{single_res[1]}/{single_res[2]}/0")
 
       res = sorted(res, key=lambda x: x[4], reverse=True)
+      
       return render_template(
         'games.html',
         headers=headers,
@@ -101,7 +103,7 @@ def rank():
       headers = ["player1", "wins", "loses", "score", "rank"]
 
       res = sorted(res, key=lambda x: x[4], reverse=True)
-
+      
       return render_template(
         'rankings.html',
         headers=headers,
@@ -156,10 +158,14 @@ def ranktour():
       for k, r_list in bot_res.items():
             score = 0
             for r in r_list:
-                  if r[6] > r[7]:
+                  if r[6] > r[7] and k[0] == r[0]:
                         score += 1
-                  if r[6] < r[7]:
+                  if r[6] < r[7] and k[0] == r[0]:
                         score -= 1
+                  if r[6] > r[7] and k[0] == r[1]:
+                        score -= 1
+                  if r[6] < r[7] and k[0] == r[1]:
+                        score += 1
             bot_score[k] = score
 
       # now map each combination of bots to a single bot score
