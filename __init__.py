@@ -75,6 +75,26 @@ def list_games():
     )
 
 
+@app.route('/games_no_score')
+def list_games_no_score():
+      res = execute_query("select * from runs")
+      headers = ["player1", "player2", "map", "time added", "time played", "finished", "link"]
+
+      res = [r[:6] for r in res]
+
+      res = [list(single_res) for single_res in res]
+
+      for single_res in res:
+            single_res.append(f"/render/{single_res[0]}/{single_res[1]}/{single_res[2]}/0")
+
+      res = sorted(res, key=lambda x: x[4], reverse=True)
+      return render_template(
+        'games.html',
+        headers=headers,
+        tableData=res
+    )
+
+
 @app.route('/rank')
 def rank():
       res = execute_query("select * from rankings")
@@ -109,6 +129,50 @@ def renderimg(bot1, bot2, map, turn):
             name2=name2
       )
       
+
+def calc_res(matches):
+     
+     for mch in match
+
+@app.route('/ranktour')
+def rank():
+      res = execute_query("select * from runs where run = 'true'")
+      
+      bot_res = {}
+      bots = set()
+      for r in res:
+            bot1, bot2 = r[0], r[1]
+            if bot2 < bot1:
+                  bot1, bot2 = bot2, bot1
+            k = (bot1, bot2)
+            if k not in bot_res:
+                  bot_res[k] = []
+            bot_res[k].append(r)
+            bots.add(bot1)
+            bots.add(bot2)
+
+      bots = list(bots)
+
+      bot_score = {}
+      for k, r_list in bot_res.items():
+            score = 0
+            for r in r_list:
+                  if r[6] > r[7]:
+                        score += 1
+                  if r[6] < r[7]:
+                        score -= 1
+            bot_score[k] = score
+      
+      
+
+
+      res = sorted(res, key=lambda x: x[4], reverse=True)
+
+      return render_template(
+        'rankings.html',
+        headers=headers,
+        tableData=res
+    )
 
 if __name__ == "__main__":
 
