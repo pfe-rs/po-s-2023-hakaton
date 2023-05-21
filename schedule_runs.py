@@ -28,6 +28,18 @@ def get_all_combinations(bots, maps):
     print(f"Found combinations {res}")
     return res
 
+def get_all_combinations_symetric(bots, maps):
+    res = []
+    for i in range(len(bots)):
+        for j in range(len(bots)):
+            if j <= i:
+                continue
+            for mapp in maps:
+                res.append((bots[i], bots[j], mapp))
+
+    print(f"Found combinations {res}")
+    return res
+
 def calculate_rankings(results):
     bots_res = {}
     for res in results:
@@ -71,7 +83,7 @@ def get_completed_runs():
     return res    
 
 def add_new_runs():
-    all_possible_runs = get_all_combinations(get_all_bots(), get_all_maps())
+    all_possible_runs = get_all_combinations_symetric(get_all_bots(), get_all_maps())
     already_existing = get_committed_runs()
 
     for run in all_possible_runs:
