@@ -131,7 +131,7 @@ def renderimg(bot1, bot2, map, turn):
       
 
 @app.route('/ranktour')
-def rank():
+def ranktour():
       res = execute_query("select * from runs where run = 'true'")
       
       bot_res = {}
@@ -165,12 +165,13 @@ def rank():
       # now map each combination of bots to a single bot score
       for k in bot_score.keys():
             bot1, bot2 = k
-            if k == 0:
+            sc = bot_score[k]
+            if sc == 0:
                   bots_ranks[bot1]["score"] += 1
                   bots_ranks[bot2]["score"] += 1
                   bots_ranks[bot1]["draws"] += 1
                   bots_ranks[bot2]["draws"] += 1
-            elif k > 0:
+            elif sc > 0:
                   bots_ranks[bot1]["score"] += 3
                   bots_ranks[bot2]["score"] += 0
                   bots_ranks[bot1]["wins"] += 1
