@@ -45,6 +45,7 @@ def process_match(mch):
     
     for state in states_to_persist:
         render_image(mch[0], mch[1], mch[2], state)
+    render_gifs(mch[0], mch[1], mch[2])
 
 
 def get_all_unplayed_randomized(n):
@@ -75,10 +76,10 @@ def render_gifs(bot1, bot2, map):
     gif_prefix = bot1 + "_" + bot2 + "_" + map + "_"
     images_str = gif_prefix + "%d.jpg"
     for fps in ["1", "10"]:
-        out_gif = gif_prefix + fps + "fps.gif"
+        out_gif = os.path.join(image_loc, gif_prefix + fps + "fps.gif")
         inp_img = os.path.join(image_loc, images_str)
 
-        print(f"Rendering gif at {out_gif}")
+        print(f"{datetime.now()} Rendering gif at {out_gif}, using {inp_img} at {fps} fps")
         subprocess.run(["ffmpeg", 
                         "-framerate", fps,
                         "-i", inp_img,
